@@ -34,7 +34,7 @@ $('#todayText').textContent = new Intl.DateTimeFormat('ko-KR',{year:'numeric',mo
 function goTo(view){
   $$('.view').forEach(v=>v.classList.toggle('active',v.id===view+'View'));
   $$('.nav-item[data-view]').forEach(n=>n.classList.toggle('active',n.dataset.view===view));
-  const titles={dashboard:'안녕하세요, 원장님 👋',students:'학생 정보',classes:'반과 수업',attendance:'출석 체크',payments:'수납 현황',consulting:'상담 현황',settings:'학원 설정'};
+  const titles={dashboard:'안녕하세요, 원장님 👋',students:'학생 정보',classes:'반과 수업',attendance:'출석 체크',payments:'수납 현황',consulting:'상담 현황',reports:'AI 학습보고서',settings:'학원 설정'};
   $('#pageTitle').textContent=titles[view]||'김영은 영어학원';
   $('#sidebar').classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -72,6 +72,59 @@ function renderPayments(){
 }
 renderPayments();
 
+function renderReportStudents(){
+  const select = $('#reportStudent');
+  if(!select) return;
+  select.innerHTML = students.map((s, index)=>`<option value="${index}">${s.name} · ${s.school} · ${s.className}</option>`).join('');
+}
+renderReportStudents();
+
+async function generateReport(){
+  const button = $('#generateReportBtn');
+  const output = $('#reportOutput');
+  const student = students[Number($('#reportStudent').value)] || students[0];
+  const templateLabels = {growth:'성장 스토리', weekly:'주간 체크', classic:'클래식 리포트'};
+  const payload = {
+    academyName: '김영은 영어학원',
+    student,
+    template: templateLabels[$('#reportTemplate').value],
+    learning: {
+      vocab: $('#reportVocab').value,
+      reading: $('#reportReading').value,
+      listening: $('#reportListening').value,
+      speaking: $('#reportSpeaking').value,
+      teacherComment: $('#reportComment').value
+    }
+  };
+  button.disabled = true;
+  button.textContent = '생성 중...';
+  output.textContent = 'AI가 학부모용 보고서를 작성하고 있습니다.';
+  try{
+    const res = await fetch('/api/report', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.message || '보고서 생성에 실패했습니다.');
+    output.textContent = data.report;
+    toast('AI 학습보고서가 생성되었습니다.');
+  }catch(error){
+    output.textContent = '보고서를 만들지 못했습니다. Vercel 환경변수 OPENAI_API_KEY와 배포 상태를 확인해 주세요.';
+  }finally{
+    button.disabled = false;
+    button.textContent = 'AI 보고서 생성';
+  }
+}
+
+$('#generateReportBtn')?.addEventListener('click', generateReport);
+$('#copyReportBtn')?.addEventListener('click', async()=>{
+  const text = $('#reportOutput').textContent.trim();
+  await navigator.clipboard.writeText(text);
+  toast('보고서 내용을 복사했습니다.');
+});
+$('#printReportBtn')?.addEventListener('click', ()=>window.print());
+
 const modal=$('#studentModal');
 function syncClassOptions(){const select=$('[name="className"]',modal);const current=select.value;select.innerHTML=classes.map(c=>`<option>${c.name}</option>`).join('');if(classes.some(c=>c.name===current))select.value=current}
 function openModal(index=null){const form=$('#studentForm');form.reset();form.dataset.editIndex=index===null?'':index;syncClassOptions();const editing=index!==null;$('#studentModalKicker').textContent=editing?'EDIT STUDENT':'NEW STUDENT';$('#studentModalTitle').textContent=editing?'학생 정보 수정':'학생 등록';$('#studentSubmitBtn').textContent=editing?'수정사항 저장':'학생 등록하기';if(editing){const s=students[index];form.elements['name'].value=s.name;form.elements.school.value=s.school;form.elements.grade.value=s.grade;form.elements.className.value=s.className;form.elements.parentPhone.value=s.parentPhone}modal.classList.add('open');modal.setAttribute('aria-hidden','false');setTimeout(()=>$('[name="name"]',modal).focus(),50)}
@@ -79,7 +132,7 @@ function closeModal(){modal.classList.remove('open');modal.setAttribute('aria-hi
 $$('[data-open-modal]').forEach(b=>b.addEventListener('click',()=>openModal()));
 $$('.close-modal').forEach(b=>b.addEventListener('click',closeModal));
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-$('#studentForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);const index=e.currentTarget.dataset.editIndex===''?null:Number(e.currentTarget.dataset.editIndex);const data={name:f.get('name'),school:f.get('school'),year:f.get('grade')==='초등'?'6학년':'1학년',grade:f.get('grade'),className:f.get('className'),parentPhone:maskPhone(f.get('parentPhone'))};if(index===null){students.unshift({...data,payment:'미납',status:'재원'})}else{const oldName=students[index].name;students[index]={...students[index],...data};if(oldName!==data.name&&paymentRecords[oldName]){paymentRecords[data.name]=paymentRecords[oldName];delete paymentRecords[oldName];localStorage.setItem('kye_payments',JSON.stringify(paymentRecords))}}saveStudents();renderStudents();renderPayments();closeModal();goTo('students');toast(index===null?`${data.name} 학생이 등록되었습니다.`:`${data.name} 학생 정보가 수정되었습니다.`)});
+$('#studentForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);const index=e.currentTarget.dataset.editIndex===''?null:Number(e.currentTarget.dataset.editIndex);const data={name:f.get('name'),school:f.get('school'),year:f.get('grade')==='초등'?'6학년':'1학년',grade:f.get('grade'),className:f.get('className'),parentPhone:maskPhone(f.get('parentPhone'))};if(index===null){students.unshift({...data,payment:'미납',status:'재원'})}else{const oldName=students[index].name;students[index]={...students[index],...data};if(oldName!==data.name&&paymentRecords[oldName]){paymentRecords[data.name]=paymentRecords[oldName];delete paymentRecords[oldName];localStorage.setItem('kye_payments',JSON.stringify(paymentRecords))}}saveStudents();renderStudents();renderPayments();renderReportStudents();closeModal();goTo('students');toast(index===null?`${data.name} 학생이 등록되었습니다.`:`${data.name} 학생 정보가 수정되었습니다.`)});
 
 const classModal=$('#classModal');
 function openClassModal(index=null){const form=$('#classForm');form.reset();form.dataset.editIndex=index===null?'':index;const editing=index!==null;$('#classModalKicker').textContent=editing?'EDIT CLASS':'NEW CLASS';$('#classModalTitle').textContent=editing?'반 정보 수정':'새 반 만들기';$('#classSubmitBtn').textContent=editing?'수정사항 저장':'반 만들기';if(editing){const c=classes[index];Object.keys(c).forEach(key=>{if(form.elements[key])form.elements[key].value=c[key]})}classModal.classList.add('open');classModal.setAttribute('aria-hidden','false')}

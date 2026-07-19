@@ -1,0 +1,2342 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>김영은 영어학원 학원관리대시보드</title>
+  <style>
+    :root {
+      --sidebar: #174a7c;
+      --sidebar-deep: #0d3157;
+      --sidebar-soft: rgba(255, 255, 255, .12);
+      --primary: #2563a8;
+      --primary-soft: #e8f1ff;
+      --ink: #1d2b38;
+      --muted: #6b7785;
+      --line: #dbe3ea;
+      --paper: #f4f7f9;
+      --card: #ffffff;
+      --danger: #c44545;
+      --warn: #d9822b;
+      --blue: #3678c2;
+      --purple: #5a6fd8;
+      --orange: #e08a37;
+      --green: #2d8ac8;
+      --deep-green: #1f5f99;
+      --shadow: 0 12px 28px rgba(31, 45, 61, .10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, var(--sidebar), var(--sidebar-deep));
+      color: #f6fffb;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 100vh;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 4px 18px;
+    }
+
+    .brand-mark {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background: #e8f1ff;
+      color: var(--sidebar);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      letter-spacing: 0;
+      position: relative;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      top: 13px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--sidebar);
+    }
+
+    .brand-mark::before {
+      left: 11px;
+    }
+
+    .brand-mark::after {
+      right: 11px;
+    }
+
+    .brand-mark span {
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: rgba(255, 255, 255, .68);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: var(--sidebar-soft);
+      color: #effff9;
+      border-radius: 8px;
+      min-height: 46px;
+      padding: 0 14px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    .nav button.active {
+      background: #fff1df;
+      color: #173f70;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .14);
+    }
+
+    .nav .icon {
+      width: 22px;
+      text-align: center;
+      color: inherit;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .round-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .10);
+      color: #fff;
+      display: grid;
+      place-items: center;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 28px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .owl {
+      width: 92px;
+      height: 62px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .owl .bird {
+      position: absolute;
+      bottom: 5px;
+      width: 43px;
+      height: 48px;
+      border-radius: 21px 21px 16px 16px;
+      background: #253846;
+      box-shadow: inset 0 -6px 0 rgba(255, 255, 255, .10);
+    }
+
+    .owl .bird:first-child {
+      left: 0;
+    }
+
+    .owl .bird:last-child {
+      right: 0;
+      background: #334a59;
+    }
+
+    .owl .bird::before,
+    .owl .bird::after {
+      content: "";
+      position: absolute;
+      top: 12px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: inset 0 0 0 4px #253846;
+    }
+
+    .owl .bird::before {
+      left: 9px;
+    }
+
+    .owl .bird::after {
+      right: 9px;
+    }
+
+    .owl .scarf {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 30px;
+      height: 7px;
+      background: #e76f51;
+      border-radius: 4px;
+    }
+
+    .owl .bird:last-child .scarf {
+      background: #f2c94c;
+    }
+
+    .owl::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 0;
+      height: 4px;
+      background: #253846;
+      border-radius: 8px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 8px;
+      min-height: 40px;
+      padding: 0 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .btn.warning {
+      background: #fff8e8;
+      border-color: #f0d9a4;
+      color: #6b4a09;
+    }
+
+    .btn.danger {
+      background: #fff0f0;
+      border-color: #ecc7c7;
+      color: var(--danger);
+    }
+
+    .panel {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(20, 55, 76, .08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notice {
+      margin: 18px 20px 0;
+      padding: 11px 13px;
+      background: #fff8e9;
+      border: 1px solid #f1dfb8;
+      border-radius: 8px;
+      color: #6a521d;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 160px minmax(260px, 1fr) 150px minmax(220px, 1fr);
+      gap: 12px;
+      padding: 18px 20px;
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 0 10px;
+    }
+
+    .field textarea {
+      min-height: 82px;
+      padding: 10px;
+      resize: vertical;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 16px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stat .value {
+      margin-top: 8px;
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .stat .hint {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap: 16px;
+    }
+
+    .chart-wrap {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .donut {
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) 0deg 0deg, var(--orange) 0deg 0deg, var(--danger) 0deg 0deg, var(--blue) 0deg 0deg, #eef2f5 0deg 360deg);
+      position: relative;
+      margin: auto;
+    }
+
+    .donut::before {
+      content: "";
+      position: absolute;
+      inset: 44px;
+      border-radius: 50%;
+      background: var(--card);
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 800;
+      font-size: 28px;
+      z-index: 1;
+    }
+
+    .legend {
+      display: grid;
+      gap: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .legend-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .alerts {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .alert-row {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .alert-row:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .alert-title {
+      font-weight: 800;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #edf4f1;
+      color: #315748;
+    }
+
+    .chip.warn {
+      background: #fff3d8;
+      color: #6e4d0d;
+    }
+
+    .chip.danger {
+      background: #ffecec;
+      color: #9b2e2e;
+    }
+
+    .table-card {
+      overflow: hidden;
+    }
+
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+
+    .class-summary {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      border-radius: 999px;
+      padding: 0 9px;
+      background: var(--primary-soft);
+      color: #155442;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .table-scroll {
+      overflow: auto;
+      max-width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1220px;
+      background: #fff;
+    }
+
+    th,
+    td {
+      border: 1px solid #b8c7d5;
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    th {
+      font-weight: 800;
+      background: #e9f0f5;
+    }
+
+    .fixed-head {
+      background: #174a7c;
+      color: #fff;
+    }
+
+    .student-cell {
+      min-width: 205px;
+      text-align: left;
+      background: #f8fbfd;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .student-cell:hover {
+      background: #eef6ff;
+    }
+
+    .session-head {
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .s1 {
+      background: var(--green);
+    }
+
+    .s2 {
+      background: var(--orange);
+    }
+
+    .s3 {
+      background: var(--blue);
+    }
+
+    .s4 {
+      background: var(--purple);
+    }
+
+    .s5 {
+      background: var(--deep-green);
+    }
+
+    .cell-select,
+    .cell-input {
+      width: 74px;
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 0 6px;
+      background: #fff;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .cell-input {
+      width: 78px;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f6f9fb;
+    }
+
+    tbody tr:nth-child(even) .student-cell {
+      background: #f1f7ff;
+    }
+
+    .edit-input,
+    .edit-select {
+      width: 100%;
+      min-width: 96px;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      padding: 0 8px;
+    }
+
+    .edit-input.name {
+      min-width: 96px;
+      font-weight: 800;
+    }
+
+    .edit-input.memo {
+      min-width: 150px;
+    }
+
+    .student-identity {
+      display: grid;
+      grid-template-columns: minmax(96px, 1fr) minmax(96px, 1fr);
+      gap: 6px;
+      align-items: center;
+      min-width: 230px;
+    }
+
+    .student-identity .identity-extra {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .homework-table table {
+      min-width: 1050px;
+    }
+
+    .homework-filters {
+      grid-template-columns: minmax(260px, 1fr) 170px repeat(3, minmax(170px, 1fr));
+    }
+
+    .assignment-name {
+      display: grid;
+      gap: 5px;
+      text-align: left;
+    }
+
+    .assignment-name span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .detail-panel {
+      display: grid;
+      grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr);
+      gap: 16px;
+    }
+
+    .detail-card {
+      padding: 18px;
+    }
+
+    .detail-card h3 {
+      margin: 0 0 12px;
+    }
+
+    .kv {
+      display: grid;
+      gap: 8px;
+    }
+
+    .kv div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .kv strong {
+      color: var(--ink);
+    }
+
+    .simple-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .module-card {
+      padding: 18px;
+      min-height: 160px;
+    }
+
+    .module-card h3 {
+      margin: 0 0 8px;
+    }
+
+    .module-card p {
+      color: var(--muted);
+      margin: 0 0 14px;
+      line-height: 1.5;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+      font-weight: 700;
+    }
+
+    .student-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 16px;
+    }
+
+    .student-form {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      background: #163c2e;
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .22s ease;
+      z-index: 20;
+      font-weight: 700;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 30, 38, .38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 30;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      background: var(--card);
+      border-radius: 8px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .25);
+    }
+
+    .modal-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+    }
+
+    .modal-body {
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .empty {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 240px minmax(0, 1fr);
+      }
+
+      .filters,
+      .homework-filters,
+      .stats,
+      .dashboard-grid,
+      .student-layout,
+      .detail-panel {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .chart-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        min-height: auto;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .hero,
+      .hero-title,
+      .filters,
+      .homework-filters,
+      .stats,
+      .dashboard-grid,
+      .student-layout,
+      .detail-panel,
+      .simple-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="주 메뉴">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span>김</span></div>
+        <div>
+          <h1>김영은 영어학원<br>학원관리대시보드</h1>
+          <p>방학 문법반 운영</p>
+        </div>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div class="sidebar-footer">
+        <button class="round-btn" type="button" aria-label="사용자">人</button>
+        <button class="round-btn" type="button" aria-label="설정">⚙</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="hero">
+        <div class="hero-title">
+          <div class="owl" aria-label="부엉이 로고">
+            <div class="bird"><span class="scarf"></span></div>
+            <div class="bird"><span class="scarf"></span></div>
+          </div>
+          <div>
+            <h2 id="pageTitle">학원 관리대시보드</h2>
+            <p class="subtitle">출결, 숙제, 진도, 단어, 교재, 학생관리를 한 화면 흐름으로 관리합니다.</p>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn" type="button" data-action="student">학생 등록</button>
+          <button class="btn warning" type="button" data-action="save">출석 저장</button>
+          <button class="btn" type="button" data-action="export">엑셀/PDF 내보내기</button>
+        </div>
+      </header>
+
+      <section id="content" class="panel" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="studentModal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="studentModalTitle">학생 등록</h3>
+        <button class="btn" type="button" data-action="close-modal">닫기</button>
+      </div>
+      <form id="studentForm">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field">
+              <label for="studentName">학생 이름</label>
+              <input id="studentName" name="name" required placeholder="예: 김미래">
+            </div>
+            <div class="field">
+              <label for="studentSchool">학교</label>
+              <input id="studentSchool" name="school" placeholder="예: 화금고">
+            </div>
+            <div class="field">
+              <label for="studentGrade">학년</label>
+              <select id="studentGrade" name="grade">
+                <option>고1</option>
+                <option>고2</option>
+                <option>고3</option>
+                <option>중3</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="studentClass">반</label>
+              <select id="studentClass" name="classId"></select>
+            </div>
+            <div class="field">
+              <label for="studentStatus">상태</label>
+              <select id="studentStatus" name="status">
+                <option>재원</option>
+                <option>신입</option>
+                <option>휴원</option>
+                <option>퇴원</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="studentPhone">학생 연락처</label>
+              <input id="studentPhone" name="phone" placeholder="010-0000-0000">
+            </div>
+            <div class="field">
+              <label for="parentPhone">보호자 연락처</label>
+              <input id="parentPhone" name="parentPhone" placeholder="010-0000-0000">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="grammarBook">문법 교재</label>
+              <input id="grammarBook" name="grammarBook" placeholder="문법 교재명">
+            </div>
+            <div class="field">
+              <label for="readingBook">독해 교재</label>
+              <input id="readingBook" name="readingBook" placeholder="독해 교재명">
+            </div>
+            <div class="field">
+              <label for="writingBook">영작 교재</label>
+              <input id="writingBook" name="writingBook" placeholder="영작 교재명">
+            </div>
+            <div class="field">
+              <label for="vocabBook">어휘 교재</label>
+              <input id="vocabBook" name="vocabBook" placeholder="어휘/봉카 교재명">
+            </div>
+            <div class="field">
+              <label for="listeningBook">듣기 교재</label>
+              <input id="listeningBook" name="listeningBook" placeholder="듣기 교재명">
+            </div>
+          </div>
+          <div class="field">
+            <label for="studentMemo">메모</label>
+            <textarea id="studentMemo" name="memo" placeholder="상담 내용, 보강 일정, 단어 재시험 메모"></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn" type="button" data-action="close-modal">취소</button>
+          <button class="btn primary" type="submit">등록하기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const academy = {
+      menus: [
+        ["attendance", "출결관리", "●"],
+        ["feedback", "월말평가피드백", "▣"],
+        ["students", "학생관리", "人"],
+        ["online", "인강 관리", "▶"],
+        ["level", "레벨테스트/진단", "✓"],
+        ["homework", "숙제관리", "□"],
+        ["progress", "진도관리", "≡"],
+        ["vocab", "단어관리(봉카)", "Aa"]
+      ],
+      books: ["비숲고1", "비숲고2", "포산고1", "포산고2", "포산중3", "험프고", "문법 실전 프린트", "봉카 단어장"],
+      bookCategories: [
+        { key: "grammar", label: "문법" },
+        { key: "reading", label: "독해" },
+        { key: "writing", label: "영작" },
+        { key: "vocab", label: "어휘" },
+        { key: "listening", label: "듣기" }
+      ],
+      classes: [
+        { id: "tue-g1-a", day: "화요일", name: "고1 정규반 A", subject: "문법", time: "6:00~8:30", count: 9, dates: ["7/7", "7/14", "7/21", "8/4", "8/11"] },
+        { id: "tue-g2", day: "화요일", name: "고2 정규반", subject: "문법", time: "6:45~9:15", count: 15, dates: ["7/7", "7/14", "7/21", "8/4", "8/11"] },
+        { id: "wed-g1-top", day: "수요일", name: "고1 상반", subject: "문법", time: "5:00~7:30", count: 12, dates: ["7/8", "7/15", "7/22", "8/5", "8/12"] },
+        { id: "wed-g1-b", day: "수요일", name: "고1 정규반 B", subject: "문법", time: "5:45~8:15", count: 16, dates: ["7/8", "7/15", "7/22", "8/5", "8/12"] },
+        { id: "wed-g2-top", day: "수요일", name: "고2 상반", subject: "문법", time: "7:25~9:55", count: 7, dates: ["7/8", "7/15", "7/22", "8/5", "8/12"] },
+        { id: "fri-g1-a", day: "금요일", name: "고1 정규반 A", subject: "문법", time: "6:00~8:30", count: 18, dates: ["7/10", "7/17", "7/24", "8/7", "8/14"] },
+        { id: "fri-g2", day: "금요일", name: "고2 정규반", subject: "문법", time: "6:45~9:15", count: 14, dates: ["7/10", "7/17", "7/24", "8/7", "8/14"] },
+        { id: "sat-g1-top", day: "토요일", name: "고1 상반", subject: "문법", time: "5:00~7:30", count: 12, dates: ["7/11", "7/18", "7/25", "8/8", "8/15"] },
+        { id: "sat-g1-b", day: "토요일", name: "고1 정규반 B", subject: "문법", time: "5:45~8:15", count: 7, dates: ["7/11", "7/18", "7/25", "8/8", "8/15"] },
+        { id: "sat-g2-top", day: "토요일", name: "고2 상반", subject: "문법", time: "7:25~9:55", count: 8, dates: ["7/11", "7/18", "7/25", "8/8", "8/15"] }
+      ],
+      students: [],
+      homeworkPlans: {},
+      moduleData: {},
+      storageKey: "kim-english-academy-dashboard-v2",
+      state: {
+        activeMenu: "attendance",
+        classId: "tue-g1-a",
+        status: "전체",
+        search: "",
+        homeworkSessionIndex: 0,
+        selectedStudentId: null
+      }
+    };
+
+    const sampleNames = {
+      "tue-g1-a": ["이서율", "배서현", "김민준", "김민승", "이혜민", "장미주", "이강우", "김도윤", "조하윤"],
+      "tue-g2": ["강민성", "장윤민", "백경모", "안준휘", "최민지", "김나영", "김은희", "정서윤", "박승준", "이도윤", "이환희", "강민재", "서정호", "박준영", "서경민"],
+      "wed-g1-top": ["염수민", "유지원", "이은솔", "이승윤", "박소연", "김도현", "이은성", "박영주", "안시현", "권보영", "김보민", "김서윤"],
+      "wed-g1-b": ["주소율", "윤주원", "전태형", "장예원", "정하윤", "정유빈", "유수민", "박서윤", "박채은", "최윤서", "공윤서", "김서윤", "손가윤", "임채원", "윤리윤", "주아린"],
+      "wed-g2-top": ["이현준", "이현석", "박채린", "정유준", "김도윤", "정예린", "박서현"],
+      "fri-g1-a": ["이서율", "배서현", "김민준", "장예원", "이혜민", "장미주", "이강우", "정하윤", "박채은", "유수민", "정유빈", "임채원", "박서윤", "김서윤", "최윤서", "윤리윤", "정다윤", "조하윤"],
+      "fri-g2": ["강민성", "장윤민", "백경모", "안준휘", "최민지", "장윤서", "김은희", "정서윤", "박승준", "이도윤", "이환희", "박준영", "서정호", "박소연"],
+      "sat-g1-top": ["염수민", "유지원", "이은솔", "이승윤", "배서현", "김도현", "이은성", "안시현", "김나영", "권보영", "김보민", "황지윤"],
+      "sat-g1-b": ["주소율", "윤주원", "공윤서", "손가윤", "조하윤", "이강우", "주아린"],
+      "sat-g2-top": ["이현준", "이현석", "박채린", "정유준", "김도윤", "정예린", "박서현", "서경민"]
+    };
+
+    function createSampleData() {
+      let id = 1;
+      academy.classes.forEach((klass, classIndex) => {
+        const names = sampleNames[klass.id] || [];
+        names.forEach((name, index) => {
+          const book = academy.books[(index + classIndex) % 6];
+          const courseBooks = {
+            grammar: book,
+            reading: ["리딩파워", "수능독해", "구문독해"][index % 3],
+            writing: ["영작 기본", "서술형 훈련", "문장전환"][index % 3],
+            vocab: ["봉카 단어장", "어휘끝", "워드마스터"][index % 3],
+            listening: ["듣기 실전", "듣기 모의고사", "리스닝 클리닉"][index % 3]
+          };
+          const records = klass.dates.map((date, sessionIndex) => {
+            const seed = index + sessionIndex + classIndex;
+            const homeworkItems = ["문법", "독해", "어휘"].map((name, homeworkIndex) => ({
+              name,
+              status: (seed + homeworkIndex) % 7 === 0 ? "미완료" : (seed + homeworkIndex) % 5 === 0 ? "반 완료" : "완료"
+            }));
+            return {
+              date,
+              attendance: seed % 11 === 0 ? "결석" : seed % 7 === 0 ? "지각" : seed % 13 === 0 ? "보강" : "출석",
+              homework: homeworkItems.some(item => item.status === "미완료") ? "미완료" : "완료",
+              homeworkItems,
+              word: seed % 6 === 0 ? "재시험" : String(78 + ((seed * 7) % 23))
+            };
+          });
+          academy.students.push({
+            id: "s" + id++,
+            name,
+            school: index % 3 === 0 ? "화금고" : index % 3 === 1 ? "수토고" : "미래고",
+            grade: klass.name.includes("고2") ? "고2" : "고1",
+            classId: klass.id,
+            book,
+            courseBooks,
+            vocabHistory: [`이전 교재: ${courseBooks.vocab}`],
+            phone: "010-" + String(2400 + index).padStart(4, "0") + "-" + String(4100 + id).padStart(4, "0"),
+            parentPhone: "010-" + String(7100 + index).padStart(4, "0") + "-" + String(5200 + id).padStart(4, "0"),
+            status: "재원",
+            memo: index % 4 === 0 ? "단어 확인 필요" : "",
+            records
+          });
+        });
+        academy.homeworkPlans[klass.id] = klass.dates.map((date, sessionIndex) => [
+          `${sessionIndex + 1}회차 문법`,
+          `${sessionIndex + 1}회차 독해`,
+          `${sessionIndex + 1}회차 어휘`
+        ]);
+      });
+      academy.state.selectedStudentId = academy.students[0].id;
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(academy.storageKey, JSON.stringify({
+          students: academy.students,
+          homeworkPlans: academy.homeworkPlans,
+          moduleData: academy.moduleData
+        }));
+      } catch (error) {
+        console.warn("저장 공간을 사용할 수 없습니다.", error);
+      }
+    }
+
+    function loadSavedState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(academy.storageKey) || "null");
+        if (!saved) return;
+        if (Array.isArray(saved.students) && saved.students.length) academy.students = saved.students;
+        if (saved.homeworkPlans) academy.homeworkPlans = saved.homeworkPlans;
+        if (saved.moduleData) academy.moduleData = saved.moduleData;
+      } catch (error) {
+        console.warn("저장된 데이터를 불러오지 못했습니다.", error);
+      }
+    }
+
+    function $(selector, scope = document) {
+      return scope.querySelector(selector);
+    }
+
+    function $all(selector, scope = document) {
+      return Array.from(scope.querySelectorAll(selector));
+    }
+
+    function getClass() {
+      return academy.classes.find(item => item.id === academy.state.classId);
+    }
+
+    function getStudentsForClass() {
+      return academy.students.filter(student => student.classId === academy.state.classId);
+    }
+
+    function getHomeworkNames(classId, sessionIndex) {
+      const klass = academy.classes.find(item => item.id === classId);
+      if (!academy.homeworkPlans[classId]) {
+        academy.homeworkPlans[classId] = klass.dates.map((date, index) => [
+          `${index + 1}회차 문법`,
+          `${index + 1}회차 독해`,
+          `${index + 1}회차 어휘`
+        ]);
+      }
+      return academy.homeworkPlans[classId][sessionIndex];
+    }
+
+    function ensureHomeworkItems(student, sessionIndex) {
+      const record = student.records[sessionIndex];
+      const names = getHomeworkNames(student.classId, sessionIndex);
+      if (!record.homeworkItems) {
+        record.homeworkItems = names.map(name => ({ name, status: record.homework || "완료" }));
+      }
+      record.homeworkItems = names.map((name, index) => ({
+        name,
+        status: record.homeworkItems[index]?.status || record.homework || "완료"
+      }));
+      record.homework = record.homeworkItems.some(item => item.status === "미완료") ? "미완료" : "완료";
+      return record.homeworkItems;
+    }
+
+    function isHomeworkIncomplete(record) {
+      if (record.homeworkItems) return record.homeworkItems.some(item => item.status === "미완료");
+      return record.homework === "미완료";
+    }
+
+    function getCurrentSessionIndex() {
+      const dateInput = $("#dateFilter");
+      if (!dateInput) return 1;
+      const selected = dateInput.value.slice(5).replace("-", "/").replace(/^0/, "").replace("/0", "/");
+      const found = getClass().dates.findIndex(date => date === selected);
+      return found >= 0 ? found : 1;
+    }
+
+    function filteredStudents() {
+      const sessionIndex = getCurrentSessionIndex();
+      return getStudentsForClass().filter(student => {
+        const record = student.records[sessionIndex] || student.records[0];
+        const matchStatus = academy.state.status === "전체" || academy.state.status === "재원생" || record.attendance === academy.state.status;
+        const matchEnroll = academy.state.status !== "재원생" || student.status === "재원";
+        const keyword = academy.state.search.trim().toLowerCase();
+        const bookText = Object.values(student.courseBooks || {}).join(" ");
+        const matchSearch = !keyword || [student.name, student.school, student.book, student.grade, bookText].join(" ").toLowerCase().includes(keyword);
+        return matchStatus && matchEnroll && matchSearch;
+      });
+    }
+
+    function calcStats() {
+      const sessionIndex = getCurrentSessionIndex();
+      const students = filteredStudents();
+      const stats = { total: students.length, 출석: 0, 지각: 0, 결석: 0, 보강: 0, incomplete: 0, retest: 0 };
+      students.forEach(student => {
+        const record = student.records[sessionIndex] || student.records[0];
+        stats[record.attendance] = (stats[record.attendance] || 0) + 1;
+        if (isHomeworkIncomplete(record)) stats.incomplete += 1;
+        if (record.word === "재시험" || Number(record.word) < 80) stats.retest += 1;
+      });
+      return stats;
+    }
+
+    function renderNav() {
+      const nav = $("#nav");
+      nav.innerHTML = academy.menus.map(([id, label, icon]) => `
+        <button type="button" class="${academy.state.activeMenu === id ? "active" : ""}" data-menu="${id}">
+          <span class="icon">${icon}</span><span>${label}</span>
+        </button>
+      `).join("");
+    }
+
+    function render() {
+      renderNav();
+      const active = academy.menus.find(menu => menu[0] === academy.state.activeMenu);
+      $("#pageTitle").textContent = active && active[0] !== "attendance" ? active[1] : "학원 관리대시보드";
+      if (academy.state.activeMenu === "attendance") renderAttendance();
+      else if (academy.state.activeMenu === "students") renderStudents();
+      else if (academy.state.activeMenu === "homework") renderHomework();
+      else if (academy.state.activeMenu === "feedback") renderFeedback();
+      else if (academy.state.activeMenu === "online") renderOnline();
+      else if (academy.state.activeMenu === "progress") renderProgress();
+      else if (academy.state.activeMenu === "vocab") renderVocab();
+      else renderModule(academy.state.activeMenu);
+    }
+
+    function renderAttendance() {
+      const klass = getClass();
+      const stats = calcStats();
+      const content = $("#content");
+      content.innerHTML = `
+        <article class="card">
+          <div class="section-head">
+            <div>
+              <h3>출결관리 대시보드</h3>
+              <p>운영 기간: 7월 6일 ~ 2학기 내신대비 전 · 과목: 문법</p>
+            </div>
+            <span class="badge">${klass.day} · ${klass.name}</span>
+          </div>
+          <div class="notice">학생 이름 옆에 현재 출결 상태가 바로 표시됩니다. 각 회차별 출석, 과제, 단어 TEST를 즉시 수정할 수 있습니다.</div>
+          <div class="filters">
+            <div class="field">
+              <label for="dateFilter">수업일</label>
+              <input id="dateFilter" type="date" value="2026-07-14">
+            </div>
+            <div class="field">
+              <label for="classFilter">반 선택</label>
+              <select id="classFilter">${academy.classes.map(item => `<option value="${item.id}" ${item.id === academy.state.classId ? "selected" : ""}>${item.day} · ${item.name} · ${item.time} · ${academy.students.filter(student => student.classId === item.id).length || item.count}명</option>`).join("")}</select>
+            </div>
+            <div class="field">
+              <label for="statusFilter">상태</label>
+              <select id="statusFilter">${["전체", "출석", "지각", "결석", "보강", "재원생"].map(status => `<option ${status === academy.state.status ? "selected" : ""}>${status}</option>`).join("")}</select>
+            </div>
+            <div class="field">
+              <label for="searchFilter">학생명 검색</label>
+              <input id="searchFilter" value="${escapeHtml(academy.state.search)}" placeholder="학생명, 학교, 교재명 검색">
+            </div>
+          </div>
+        </article>
+
+        <section class="stats" aria-label="출석 통계">
+          ${statCard("재원생", stats.total + "명", `${klass.time} 수업`)}
+          ${statCard("출석", stats.출석 + "명", "정상 출석")}
+          ${statCard("지각", stats.지각 + "명", "지각 체크")}
+          ${statCard("결석", stats.결석 + "명", "보호자 확인")}
+          ${statCard("보강", stats.보강 + "명", "보강 관리")}
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="card chart-wrap">
+            <div class="donut" id="donut"><div class="donut-center">${stats.total}명</div></div>
+            <div>
+              <div class="section-head" style="padding:0 0 12px;border-bottom:0">
+                <div>
+                  <h3>출결상태 분포</h3>
+                  <p>${klass.day} ${klass.name} 기준</p>
+                </div>
+              </div>
+              <div class="legend">
+                ${legendItem("출석", stats.출석, "var(--green)")}
+                ${legendItem("지각", stats.지각, "var(--orange)")}
+                ${legendItem("결석", stats.결석, "var(--danger)")}
+                ${legendItem("보강", stats.보강, "var(--blue)")}
+              </div>
+            </div>
+          </article>
+          <article class="card alerts">
+            <div>
+              <h3 style="margin:0">오늘 확인 대상</h3>
+              <p class="subtitle">결석, 지각, 과제 미완료, 단어 재시험 학생</p>
+            </div>
+            ${renderAlerts()}
+          </article>
+        </section>
+
+        <article class="card table-card">
+          <div class="table-toolbar">
+            <div class="class-summary">
+              <span>${klass.day} · ${klass.name} 출석부</span>
+              <span class="badge">${klass.subject}</span>
+              <span class="badge">${klass.time}</span>
+              <span class="badge">${getStudentsForClass().length || klass.count}명</span>
+            </div>
+            <div class="chips">
+              <span class="chip">출석 O</span>
+              <span class="chip warn">지각 △</span>
+              <span class="chip danger">결석 x</span>
+              <span class="chip">과제 완료 O / 미완료 △</span>
+            </div>
+          </div>
+          <div class="table-scroll">${renderAttendanceTable()}</div>
+        </article>
+
+        ${renderStudentDetail()}
+      `;
+      setDonut(stats);
+      bindAttendanceControls();
+      bindStudentEditControls();
+    }
+
+    function statCard(label, value, hint) {
+      return `<article class="card stat"><div class="label">${label}</div><div class="value">${value}</div><div class="hint">${hint}</div></article>`;
+    }
+
+    function legendItem(label, value, color) {
+      return `<div class="legend-item"><span class="legend-name"><span class="dot" style="background:${color}"></span>${label}</span><strong>${value}명</strong></div>`;
+    }
+
+    function setDonut(stats) {
+      const total = Math.max(stats.total, 1);
+      let start = 0;
+      const parts = [
+        ["var(--green)", stats.출석],
+        ["var(--orange)", stats.지각],
+        ["var(--danger)", stats.결석],
+        ["var(--blue)", stats.보강]
+      ].map(([color, value]) => {
+        const end = start + (value / total) * 360;
+        const segment = `${color} ${start}deg ${end}deg`;
+        start = end;
+        return segment;
+      });
+      parts.push(`#eef2f5 ${start}deg 360deg`);
+      $("#donut").style.background = `conic-gradient(${parts.join(", ")})`;
+    }
+
+    function renderAlerts() {
+      const sessionIndex = getCurrentSessionIndex();
+      const groups = {
+        결석자: [],
+        지각자: [],
+        "과제 미완료": [],
+        "단어 재시험": []
+      };
+      filteredStudents().forEach(student => {
+        const record = student.records[sessionIndex] || student.records[0];
+        const label = studentLabel(student);
+        if (record.attendance === "결석") groups.결석자.push(label);
+        if (record.attendance === "지각") groups.지각자.push(label);
+        if (isHomeworkIncomplete(record)) groups["과제 미완료"].push(label);
+        if (record.word === "재시험" || Number(record.word) < 80) groups["단어 재시험"].push(label);
+      });
+      return Object.entries(groups).map(([title, names]) => `
+        <div class="alert-row">
+          <div class="alert-title">${title}</div>
+          <div class="chips">${names.length ? names.map(name => `<span class="chip ${title === "결석자" ? "danger" : "warn"}">${name}</span>`).join("") : `<span class="empty">없음</span>`}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderAttendanceTable() {
+      const klass = getClass();
+      const students = filteredStudents();
+      const sessions = klass.dates.map((date, index) => `<th class="session-head s${index + 1}" colspan="3">${index + 1}회차 (${date})</th>`).join("");
+      const subHeads = klass.dates.map(() => `<th>출석</th><th>과제</th><th>단어/TEST</th>`).join("");
+      const rows = students.map((student, rowIndex) => {
+        const cells = klass.dates.map((date, sessionIndex) => {
+          const record = student.records[sessionIndex] || { attendance: "출석", homework: "완료", word: "" };
+          return `
+            <td>${attendanceSelect(student.id, sessionIndex, record.attendance)}</td>
+            <td>${homeworkSelect(student.id, sessionIndex, record.homework)}</td>
+            <td><input class="cell-input" data-word="${student.id}:${sessionIndex}" value="${record.word}" aria-label="${student.name} ${sessionIndex + 1}회차 단어 점수"></td>
+          `;
+        }).join("");
+        return `
+          <tr>
+            <td>${rowIndex + 1}</td>
+                      ${studentIdentityCell(student, "", true)}
+            ${cells}
+          </tr>
+        `;
+      }).join("");
+      return `
+        <table aria-label="${klass.day} ${klass.name} 출석부">
+          <thead>
+            <tr><th class="fixed-head" rowspan="2">번호</th><th class="fixed-head" rowspan="2">학생명 / 학교</th>${sessions}</tr>
+            <tr>${subHeads}</tr>
+          </thead>
+          <tbody>${rows || `<tr><td colspan="17" class="empty">조건에 맞는 학생이 없습니다.</td></tr>`}</tbody>
+        </table>
+      `;
+    }
+
+    function attendanceSelect(studentId, index, value) {
+      return `<select class="cell-select" data-attendance="${studentId}:${index}" aria-label="출석 상태">${["출석", "지각", "결석", "보강"].map(item => `<option ${item === value ? "selected" : ""}>${item}</option>`).join("")}</select>`;
+    }
+
+    function homeworkSelect(studentId, index, value) {
+      return `<select class="cell-select" data-homework="${studentId}:${index}" aria-label="과제 상태">${["완료", "미완료"].map(item => `<option ${item === value ? "selected" : ""}>${item}</option>`).join("")}</select>`;
+    }
+
+    function renderStudentDetail() {
+      const student = academy.students.find(item => item.id === academy.state.selectedStudentId) || filteredStudents()[0];
+      if (!student) return "";
+      const klass = academy.classes.find(item => item.id === student.classId);
+      const attendanceRate = Math.round(student.records.filter(r => r.attendance === "출석").length / student.records.length * 100);
+      const homeworkRate = Math.round(student.records.filter(r => !isHomeworkIncomplete(r)).length / student.records.length * 100);
+      const scores = student.records.map(r => Number(r.word)).filter(Boolean);
+      const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+      return `
+        <section class="detail-panel">
+          <article class="card detail-card">
+            <h3>학생 상세 패널</h3>
+            <div class="kv">
+              <div><span>학생명</span><strong>${student.name}</strong></div>
+              <div><span>학교/학년</span><strong>${student.school} · ${student.grade}</strong></div>
+              <div><span>반</span><strong>${klass.day} ${klass.name}</strong></div>
+              <div><span>교재명</span><strong>${student.book}</strong></div>
+              <div><span>상태</span><strong>${student.status}</strong></div>
+              <div><span>메모</span><strong>${student.memo || "없음"}</strong></div>
+            </div>
+          </article>
+          <article class="card detail-card">
+            <h3>${student.name} 누적 관리</h3>
+            <div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+              ${statCard("누적 출결률", attendanceRate + "%", "출석 기준")}
+              ${statCard("숙제 완료율", homeworkRate + "%", "완료 기준")}
+              ${statCard("단어 평균", avg + "점", "재시험 제외")}
+            </div>
+          </article>
+        </section>
+      `;
+    }
+
+    function bindAttendanceControls() {
+      $("#classFilter").addEventListener("change", event => {
+        academy.state.classId = event.target.value;
+        academy.state.selectedStudentId = getStudentsForClass()[0]?.id || null;
+        render();
+      });
+      $("#statusFilter").addEventListener("change", event => {
+        academy.state.status = event.target.value;
+        render();
+      });
+      $("#searchFilter").addEventListener("input", event => {
+        academy.state.search = event.target.value;
+        render();
+      });
+      $("#dateFilter").addEventListener("change", render);
+      $all("[data-attendance]").forEach(select => {
+        select.addEventListener("change", event => updateRecord(event.target.dataset.attendance, "attendance", event.target.value));
+      });
+      $all("[data-homework]").forEach(select => {
+        select.addEventListener("change", event => updateRecord(event.target.dataset.homework, "homework", event.target.value));
+      });
+      $all("[data-word]").forEach(input => {
+        input.addEventListener("change", event => updateRecord(event.target.dataset.word, "word", event.target.value));
+      });
+      $all("[data-select-student]").forEach(cell => {
+        cell.addEventListener("click", event => {
+          if (event.target.closest("input, select, textarea, button")) return;
+          academy.state.selectedStudentId = event.currentTarget.dataset.selectStudent;
+          render();
+        });
+      });
+    }
+
+    function updateRecord(key, field, value) {
+      const [studentId, indexText] = key.split(":");
+      const student = academy.students.find(item => item.id === studentId);
+      if (!student) return;
+      const sessionIndex = Number(indexText);
+      student.records[sessionIndex][field] = value;
+      if (field === "homework") {
+        ensureHomeworkItems(student, sessionIndex).forEach(item => {
+          item.status = value;
+        });
+      }
+      academy.state.selectedStudentId = studentId;
+      saveState();
+      render();
+    }
+
+    function renderStudents() {
+      const content = $("#content");
+      const students = academy.students;
+      content.innerHTML = `
+        <section class="student-layout">
+          <article class="card table-card">
+            <div class="section-head">
+              <div>
+                <h3>학생관리</h3>
+                <p>학생 이름과 학교, 반, 교재, 연락처, 메모를 표에서 바로 수정합니다.</p>
+              </div>
+              <button class="btn primary" type="button" data-action="student">학생 등록</button>
+            </div>
+            <div class="table-scroll">
+              <table aria-label="학생 목록" style="min-width:1280px">
+                <thead>
+                  <tr><th>학생명</th><th>학교</th><th>학년</th><th>반</th><th>문법 교재</th><th>독해 교재</th><th>영작 교재</th><th>어휘 교재</th><th>듣기 교재</th><th>상태</th><th>학생 연락처</th><th>보호자</th><th>메모</th></tr>
+                </thead>
+                <tbody>
+                  ${students.slice(0, 34).map(student => {
+                    return `
+                      <tr>
+                        <td><input class="edit-input name" data-student-field="${student.id}:name" value="${escapeHtml(student.name)}" aria-label="학생명"></td>
+                        <td><input class="edit-input" data-student-field="${student.id}:school" value="${escapeHtml(student.school)}" aria-label="학교"></td>
+                        <td>${studentSelect(student.id, "grade", ["고1", "고2", "고3", "중3"], student.grade)}</td>
+                        <td>${classSelect(student)}</td>
+                        ${academy.bookCategories.map(category => `<td>${courseBookInput(student, category)}</td>`).join("")}
+                        <td>${studentSelect(student.id, "status", ["재원", "신입", "휴원", "퇴원"], student.status)}</td>
+                        <td><input class="edit-input" data-student-field="${student.id}:phone" value="${escapeHtml(student.phone || "")}" aria-label="학생 연락처"></td>
+                        <td><input class="edit-input" data-student-field="${student.id}:parentPhone" value="${escapeHtml(student.parentPhone || "")}" aria-label="보호자 연락처"></td>
+                        <td><input class="edit-input memo" data-student-field="${student.id}:memo" value="${escapeHtml(student.memo || "")}" aria-label="메모"></td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+              </table>
+            </div>
+          </article>
+          <aside class="card student-form">
+            <h3 style="margin:0">빠른 등록</h3>
+            <p class="subtitle">신입생 등록 버튼과 같은 양식으로 연결됩니다.</p>
+            <button class="btn primary" type="button" data-action="new-student">신입생 등록</button>
+            <button class="btn" type="button" data-action="student">학생 등록</button>
+            <ul class="mini-list">
+              <li><span>전체 학생</span><strong>${students.length}명</strong></li>
+              <li><span>재원생</span><strong>${students.filter(s => s.status === "재원").length}명</strong></li>
+              <li><span>관리 반</span><strong>${academy.classes.length}개</strong></li>
+              <li><span>교재칸</span><strong>5개 과목</strong></li>
+            </ul>
+          </aside>
+        </section>
+      `;
+      bindGlobalButtons(content);
+      bindStudentEditControls();
+    }
+
+    function studentSelect(studentId, field, options, value) {
+      return `<select class="edit-select" data-student-field="${studentId}:${field}" aria-label="${field}">${options.map(option => `<option ${option === value ? "selected" : ""}>${option}</option>`).join("")}</select>`;
+    }
+
+    function classSelect(student) {
+      return `<select class="edit-select" data-student-field="${student.id}:classId" aria-label="반">${academy.classes.map(klass => `<option value="${klass.id}" ${klass.id === student.classId ? "selected" : ""}>${klass.day} · ${klass.name} · ${klass.time}</option>`).join("")}</select>`;
+    }
+
+    function courseBookInput(student, category) {
+      const value = student.courseBooks?.[category.key] || (category.key === "grammar" ? student.book : "");
+      return `<input class="edit-input" data-student-field="${student.id}:courseBooks.${category.key}" value="${escapeHtml(value)}" aria-label="${category.label} 교재">`;
+    }
+
+    function bindStudentEditControls() {
+      $all("[data-student-field]").forEach(control => {
+        if (control.tagName !== "SELECT") {
+          control.addEventListener("input", event => {
+            const [studentId, field] = event.target.dataset.studentField.split(":");
+            updateStudentField(studentId, field, event.target.value, true);
+          });
+        }
+        control.addEventListener("change", event => {
+          const [studentId, field] = event.target.dataset.studentField.split(":");
+          updateStudentField(studentId, field, event.target.value);
+        });
+      });
+    }
+
+    function updateStudentField(studentId, field, value, silent = false) {
+      const student = academy.students.find(item => item.id === studentId);
+      if (!student) return;
+      if (field.startsWith("courseBooks.")) {
+        const bookKey = field.split(".")[1];
+        student.courseBooks = student.courseBooks || {};
+        student.courseBooks[bookKey] = value;
+        if (bookKey === "grammar") student.book = value;
+        if (bookKey === "vocab" && value && !student.vocabHistory?.includes(value)) {
+          student.vocabHistory = [...(student.vocabHistory || []), value];
+        }
+      } else {
+        student[field] = value;
+      }
+      if (field === "classId") {
+        const klass = academy.classes.find(item => item.id === value);
+        student.records = klass.dates.map((date, index) => ({
+          date,
+          attendance: "출석",
+          homework: "완료",
+          homeworkItems: getHomeworkNames(value, index).map(name => ({ name, status: "완료" })),
+          word: ""
+        }));
+        academy.state.classId = value;
+        academy.state.selectedStudentId = student.id;
+        renderStudents();
+      }
+      saveState();
+      if (!silent) showToast(`${student.name} 학생 정보를 수정했습니다.`);
+    }
+
+    function renderHomework() {
+      const klass = getClass();
+      const sessionIndex = Math.min(academy.state.homeworkSessionIndex || 0, klass.dates.length - 1);
+      academy.state.homeworkSessionIndex = sessionIndex;
+      const names = getHomeworkNames(klass.id, sessionIndex);
+      const students = getStudentsForClass();
+      const incomplete = students.filter(student => {
+        const items = ensureHomeworkItems(student, sessionIndex);
+        return items.some(item => item.status === "미완료");
+      }).length;
+      const halfDone = students.filter(student => {
+        const items = ensureHomeworkItems(student, sessionIndex);
+        return items.some(item => item.status === "반 완료");
+      }).length;
+      const allDone = students.filter(student => {
+        const items = ensureHomeworkItems(student, sessionIndex);
+        return items.every(item => item.status === "완료");
+      }).length;
+      $("#content").innerHTML = `
+        <article class="card">
+          <div class="section-head">
+            <div>
+              <h3>숙제관리</h3>
+              <p>문법, 독해, 어휘 숙제를 각각 완료/반 완료/미완료로 관리합니다.</p>
+            </div>
+            <button class="btn primary" type="button" data-action="save">숙제관리 저장</button>
+          </div>
+          <div class="filters homework-filters">
+            <div class="field">
+              <label for="homeworkClassFilter">반 선택</label>
+              <select id="homeworkClassFilter">${academy.classes.map(item => `<option value="${item.id}" ${item.id === klass.id ? "selected" : ""}>${item.day} · ${item.name} · ${item.time}</option>`).join("")}</select>
+            </div>
+            <div class="field">
+              <label for="homeworkSessionFilter">회차</label>
+              <select id="homeworkSessionFilter">${klass.dates.map((date, index) => `<option value="${index}" ${index === sessionIndex ? "selected" : ""}>${index + 1}회차 (${date})</option>`).join("")}</select>
+            </div>
+            ${names.map((name, index) => `
+              <div class="field">
+                <label for="homeworkName${index}">${["문법", "독해", "어휘"][index]} 과제명</label>
+                <input id="homeworkName${index}" data-homework-name="${index}" value="${escapeHtml(name)}" placeholder="과제명을 입력하세요">
+              </div>
+            `).join("")}
+          </div>
+        </article>
+
+        <section class="stats" aria-label="숙제 통계">
+          ${statCard("수강생", students.length + "명", `${klass.day} ${klass.name}`)}
+          ${statCard("과제 구분", "3개", "문법 · 독해 · 어휘")}
+          ${statCard("전체 완료", allDone + "명", "3개 모두 완료")}
+          ${statCard("반 완료 있음", halfDone + "명", "1개 이상 반 완료")}
+          ${statCard("미완료 있음", incomplete + "명", "1개 이상 미완료")}
+        </section>
+
+        <article class="card table-card homework-table">
+          <div class="table-toolbar">
+            <div class="class-summary">
+              <span>${klass.day} · ${klass.name} 숙제표</span>
+              <span class="badge">${sessionIndex + 1}회차</span>
+              <span class="badge">${klass.dates[sessionIndex]}</span>
+            </div>
+            <div class="chips">
+              <span class="chip">완료 O</span>
+              <span class="chip">반 완료 ◐</span>
+              <span class="chip warn">미완료 △</span>
+              <span class="chip danger">미완료 학생 자동 집계</span>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="숙제관리 표">
+              <thead>
+                <tr>
+                  <th class="fixed-head">번호</th>
+                  <th class="fixed-head">학생명 / 학교</th>
+                  ${names.map((name, index) => `<th class="session-head s${index + 1}">${escapeHtml(name)}</th>`).join("")}
+                  <th>요약</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${students.map((student, rowIndex) => {
+                  const items = ensureHomeworkItems(student, sessionIndex);
+                  const hasIncomplete = items.some(item => item.status === "미완료");
+                  return `
+                    <tr>
+                      <td>${rowIndex + 1}</td>
+            ${studentIdentityCell(student, "", true)}
+                      ${items.map((item, index) => `
+                        <td>
+                          <select class="cell-select" data-homework-status="${student.id}:${sessionIndex}:${index}" aria-label="${student.name} ${item.name}">
+                            <option ${item.status === "완료" ? "selected" : ""}>완료</option>
+                            <option ${item.status === "반 완료" ? "selected" : ""}>반 완료</option>
+                            <option ${item.status === "미완료" ? "selected" : ""}>미완료</option>
+                          </select>
+                        </td>
+                      `).join("")}
+                      <td><span class="chip ${hasIncomplete ? "warn" : ""}">${hasIncomplete ? "미완료 있음" : "전체 완료"}</span></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+      bindGlobalButtons($("#content"));
+      bindHomeworkControls();
+      bindStudentEditControls();
+    }
+
+    function bindHomeworkControls() {
+      $("#homeworkClassFilter").addEventListener("change", event => {
+        academy.state.classId = event.target.value;
+        academy.state.homeworkSessionIndex = 0;
+        renderHomework();
+      });
+      $("#homeworkSessionFilter").addEventListener("change", event => {
+        academy.state.homeworkSessionIndex = Number(event.target.value);
+        renderHomework();
+      });
+      $all("[data-homework-name]").forEach(input => {
+        input.addEventListener("change", event => {
+          const index = Number(event.target.dataset.homeworkName);
+          const sessionIndex = academy.state.homeworkSessionIndex;
+          getHomeworkNames(academy.state.classId, sessionIndex)[index] = event.target.value || `과제명 ${index + 1}`;
+          getStudentsForClass().forEach(student => ensureHomeworkItems(student, sessionIndex));
+          saveState();
+          renderHomework();
+          showToast("과제명을 수정했습니다.");
+        });
+      });
+      $all("[data-homework-status]").forEach(select => {
+        select.addEventListener("change", event => {
+          const [studentId, sessionText, itemText] = event.target.dataset.homeworkStatus.split(":");
+          const student = academy.students.find(item => item.id === studentId);
+          const sessionIndex = Number(sessionText);
+          const itemIndex = Number(itemText);
+          const items = ensureHomeworkItems(student, sessionIndex);
+          items[itemIndex].status = event.target.value;
+          student.records[sessionIndex].homework = items.some(item => item.status === "미완료") ? "미완료" : "완료";
+          saveState();
+          renderHomework();
+        });
+      });
+    }
+
+    function ensureModuleData(type, key, defaults) {
+      academy.moduleData[type] = academy.moduleData[type] || {};
+      academy.moduleData[type][key] = academy.moduleData[type][key] || { ...defaults };
+      return academy.moduleData[type][key];
+    }
+
+    function renderProgress() {
+      $("#content").innerHTML = `
+        <article class="card table-card">
+          <div class="section-head">
+            <div>
+              <h3>진도관리</h3>
+              <p>과목, 교재, 오늘 진도, 다음 진도, 과제, 특이사항을 모두 수정합니다.</p>
+            </div>
+            <button class="btn primary" type="button" data-action="save">진도 저장</button>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="진도관리 입력표" style="min-width:1280px">
+              <thead>
+                <tr><th>반</th><th>과목</th><th>교재</th><th>오늘 진도</th><th>다음 진도</th><th>과제</th><th>특이사항</th></tr>
+              </thead>
+              <tbody>
+                ${academy.classes.map(klass => {
+                  const data = ensureModuleData("progress", klass.id, {
+                    subject: klass.subject,
+                    textbook: "문법 실전 프린트",
+                    today: "개념 정리 및 예문 적용",
+                    next: "단원별 실전 문제",
+                    assignment: "문법/독해/어휘 과제",
+                    note: ""
+                  });
+                  return `
+                    <tr>
+                      <td class="student-cell">${klass.day} · ${klass.name}</td>
+                      <td><input class="edit-input" data-module-field="progress:${klass.id}:subject" value="${escapeHtml(data.subject)}"></td>
+                      <td><input class="edit-input" data-module-field="progress:${klass.id}:textbook" value="${escapeHtml(data.textbook)}"></td>
+                      <td><input class="edit-input memo" data-module-field="progress:${klass.id}:today" value="${escapeHtml(data.today)}"></td>
+                      <td><input class="edit-input memo" data-module-field="progress:${klass.id}:next" value="${escapeHtml(data.next)}"></td>
+                      <td><input class="edit-input memo" data-module-field="progress:${klass.id}:assignment" value="${escapeHtml(data.assignment)}"></td>
+                      <td><input class="edit-input memo" data-module-field="progress:${klass.id}:note" value="${escapeHtml(data.note)}"></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+      bindEditableModuleControls();
+      bindGlobalButtons($("#content"));
+    }
+
+    function bindEditableModuleControls() {
+      $all("[data-module-field]").forEach(control => {
+        control.addEventListener("change", event => {
+          const [type, key, field] = event.target.dataset.moduleField.split(":");
+          ensureModuleData(type, key, {})[field] = event.target.value;
+          saveState();
+          showToast("수정 내용을 반영했습니다.");
+        });
+      });
+    }
+
+    function ensureStudentModule(type, studentId, defaults) {
+      academy.moduleData[type] = academy.moduleData[type] || {};
+      academy.moduleData[type][studentId] = academy.moduleData[type][studentId] || { ...defaults };
+      return academy.moduleData[type][studentId];
+    }
+
+    function renderFeedback() {
+      const klass = getClass();
+      const students = getStudentsForClass();
+      const classData = ensureModuleData("feedbackClass", klass.id, { range: "7월 문법 1~5회차", average: "" });
+      $("#content").innerHTML = `
+        <article class="card">
+          <div class="section-head">
+            <div>
+              <h3>월말평가피드백</h3>
+              <p>평가 범위, 학생별 성적, 반평균, 피드백을 모두 수정합니다.</p>
+            </div>
+            <div class="hero-actions">
+              <button class="btn" type="button" data-action="calc-average">반평균 계산</button>
+              <button class="btn primary" type="button" data-action="save">월말평가 저장</button>
+            </div>
+          </div>
+          <div class="filters" style="grid-template-columns:minmax(280px,1fr) minmax(260px,1fr) 160px">
+            <div class="field">
+              <label for="feedbackClassFilter">반 선택</label>
+              <select id="feedbackClassFilter">${academy.classes.map(item => `<option value="${item.id}" ${item.id === klass.id ? "selected" : ""}>${item.day} · ${item.name} · ${item.time}</option>`).join("")}</select>
+            </div>
+            <div class="field">
+              <label for="feedbackRange">월말평가 범위</label>
+              <input id="feedbackRange" data-module-field="feedbackClass:${klass.id}:range" value="${escapeHtml(classData.range)}">
+            </div>
+            <div class="field">
+              <label for="feedbackAverage">반평균</label>
+              <input id="feedbackAverage" data-module-field="feedbackClass:${klass.id}:average" value="${escapeHtml(classData.average)}" placeholder="자동 계산 가능">
+            </div>
+          </div>
+        </article>
+        <article class="card table-card">
+          <div class="table-scroll">
+            <table aria-label="월말평가 입력표" style="min-width:1180px">
+              <thead>
+                <tr><th>학생명 / 학교</th><th>성적</th><th>등급</th><th>반평균 대비</th><th>피드백</th><th>보완 과제</th><th>발송 여부</th></tr>
+              </thead>
+              <tbody>
+                ${students.map(student => {
+                  const data = ensureStudentModule("feedback", student.id, {
+                    score: "85",
+                    level: "B+",
+                    compare: "",
+                    feedback: "문법 정확도 보완",
+                    action: "오답 정리",
+                    sent: "대기"
+                  });
+                  return `
+                    <tr>
+                      ${studentIdentityCell(student)}
+                      <td><input class="edit-input" data-student-module="${student.id}:feedback.score" value="${escapeHtml(data.score)}"></td>
+                      <td><input class="edit-input" data-student-module="${student.id}:feedback.level" value="${escapeHtml(data.level)}"></td>
+                      <td><input class="edit-input" data-student-module="${student.id}:feedback.compare" value="${escapeHtml(data.compare)}"></td>
+                      <td><input class="edit-input memo" data-student-module="${student.id}:feedback.feedback" value="${escapeHtml(data.feedback)}"></td>
+                      <td><input class="edit-input memo" data-student-module="${student.id}:feedback.action" value="${escapeHtml(data.action)}"></td>
+                      <td>${moduleSelect(student.id, "feedback.sent", ["대기", "발송", "보류"], data.sent)}</td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+      bindEditableModuleControls();
+      bindStudentModuleControls();
+      bindStudentEditControls();
+      bindGlobalButtons($("#content"));
+      $("#feedbackClassFilter").addEventListener("change", event => {
+        academy.state.classId = event.target.value;
+        renderFeedback();
+      });
+    }
+
+    function renderOnline() {
+      const klass = getClass();
+      const students = getStudentsForClass();
+      $("#content").innerHTML = `
+        <article class="card table-card">
+          <div class="section-head">
+            <div>
+              <h3>인강 관리</h3>
+              <p>학생별 인강명, 플랫폼, 수강률, 마감일, 상태, 메모를 모두 수정합니다.</p>
+            </div>
+            <button class="btn primary" type="button" data-action="save">인강 관리 저장</button>
+          </div>
+          <div class="filters" style="grid-template-columns:minmax(280px,1fr)">
+            <div class="field">
+              <label for="onlineClassFilter">반 선택</label>
+              <select id="onlineClassFilter">${academy.classes.map(item => `<option value="${item.id}" ${item.id === klass.id ? "selected" : ""}>${item.day} · ${item.name} · ${item.time}</option>`).join("")}</select>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="인강관리 입력표" style="min-width:1180px">
+              <thead>
+                <tr><th>학생명 / 학교</th><th>인강명</th><th>플랫폼</th><th>수강률</th><th>마감일</th><th>상태</th><th>메모</th></tr>
+              </thead>
+              <tbody>
+                ${students.map(student => {
+                  const data = ensureStudentModule("online", student.id, {
+                    lecture: "문법 보충 강의",
+                    platform: "학원 자체 인강",
+                    rate: "60",
+                    due: "2026-08-01",
+                    status: "진행중",
+                    memo: ""
+                  });
+                  return `
+                    <tr>
+                      ${studentIdentityCell(student)}
+                      <td><input class="edit-input memo" data-student-module="${student.id}:online.lecture" value="${escapeHtml(data.lecture)}"></td>
+                      <td><input class="edit-input" data-student-module="${student.id}:online.platform" value="${escapeHtml(data.platform)}"></td>
+                      <td><input class="edit-input" data-student-module="${student.id}:online.rate" value="${escapeHtml(data.rate)}"></td>
+                      <td><input class="edit-input" type="date" data-student-module="${student.id}:online.due" value="${escapeHtml(data.due)}"></td>
+                      <td>${moduleSelect(student.id, "online.status", ["진행중", "완료", "미수강", "보류"], data.status)}</td>
+                      <td><input class="edit-input memo" data-student-module="${student.id}:online.memo" value="${escapeHtml(data.memo)}"></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+      bindStudentModuleControls();
+      bindStudentEditControls();
+      bindGlobalButtons($("#content"));
+      $("#onlineClassFilter").addEventListener("change", event => {
+        academy.state.classId = event.target.value;
+        renderOnline();
+      });
+    }
+
+    function renderVocab() {
+      const klass = getClass();
+      const students = getStudentsForClass();
+      $("#content").innerHTML = `
+        <article class="card table-card">
+          <div class="section-head">
+            <div>
+              <h3>단어관리(봉카)</h3>
+              <p>학생별 어휘 교재, 새 교재, 과거 교재 기록, 점수, 재시험 여부를 수정합니다.</p>
+            </div>
+            <button class="btn primary" type="button" data-action="save">단어관리 저장</button>
+          </div>
+          <div class="filters" style="grid-template-columns:minmax(280px,1fr)">
+            <div class="field">
+              <label for="vocabClassFilter">반 선택</label>
+              <select id="vocabClassFilter">${academy.classes.map(item => `<option value="${item.id}" ${item.id === klass.id ? "selected" : ""}>${item.day} · ${item.name} · ${item.time}</option>`).join("")}</select>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="단어관리 입력표" style="min-width:1300px">
+              <thead>
+                <tr><th>학생명 / 학교</th><th>현재 어휘 교재</th><th>새 교재 입력</th><th>과거 교재 기록</th><th>최근 점수</th><th>재시험</th><th>메모</th></tr>
+              </thead>
+              <tbody>
+                ${students.map(student => {
+                  const data = ensureStudentModule("vocab", student.id, {
+                    currentBook: student.courseBooks?.vocab || "봉카 단어장",
+                    newBook: "",
+                    history: (student.vocabHistory || []).join(" / "),
+                    score: "85",
+                    retest: "아니오",
+                    memo: ""
+                  });
+                  return `
+                    <tr>
+                      ${studentIdentityCell(student)}
+                      <td><input class="edit-input" data-student-module="${student.id}:vocab.currentBook" value="${escapeHtml(data.currentBook)}"></td>
+                      <td><input class="edit-input" data-student-module="${student.id}:vocab.newBook" value="${escapeHtml(data.newBook)}" placeholder="새 교재명"></td>
+                      <td><input class="edit-input memo" data-student-module="${student.id}:vocab.history" value="${escapeHtml(data.history)}"></td>
+                      <td><input class="edit-input" data-student-module="${student.id}:vocab.score" value="${escapeHtml(data.score)}"></td>
+                      <td>${moduleSelect(student.id, "vocab.retest", ["아니오", "예", "대기"], data.retest)}</td>
+                      <td><input class="edit-input memo" data-student-module="${student.id}:vocab.memo" value="${escapeHtml(data.memo)}"></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+      bindStudentModuleControls();
+      bindStudentEditControls();
+      bindGlobalButtons($("#content"));
+      $("#vocabClassFilter").addEventListener("change", event => {
+        academy.state.classId = event.target.value;
+        renderVocab();
+      });
+    }
+
+    function moduleSelect(studentId, path, options, value) {
+      return `<select class="edit-select" data-student-module="${studentId}:${path}">${options.map(option => `<option ${option === value ? "selected" : ""}>${option}</option>`).join("")}</select>`;
+    }
+
+    function bindStudentModuleControls() {
+      $all("[data-student-module]").forEach(control => {
+        control.addEventListener("change", event => {
+          const [studentId, path] = event.target.dataset.studentModule.split(":");
+          const [type, field] = path.split(".");
+          const data = ensureStudentModule(type, studentId, {});
+          data[field] = event.target.value;
+          if (type === "vocab") syncVocabBook(studentId, field, event.target.value, data);
+          if (type === "vocab" && field === "newBook" && event.target.value) {
+            saveState();
+            renderVocab();
+            showToast("새 어휘 교재를 현재 교재와 과거 기록에 연결했습니다.");
+            return;
+          }
+          saveState();
+          showToast("수정 내용을 반영했습니다.");
+        });
+      });
+    }
+
+    function syncVocabBook(studentId, field, value, data) {
+      const student = academy.students.find(item => item.id === studentId);
+      if (!student) return;
+      student.courseBooks = student.courseBooks || {};
+      student.vocabHistory = student.vocabHistory || [];
+      if (field === "currentBook") {
+        student.courseBooks.vocab = value;
+      }
+      if (field === "newBook" && value) {
+        student.courseBooks.vocab = value;
+        if (!student.vocabHistory.includes(value)) student.vocabHistory.push(value);
+        data.currentBook = value;
+        data.history = student.vocabHistory.join(" / ");
+      }
+      if (field === "history") {
+        student.vocabHistory = value.split("/").map(item => item.trim()).filter(Boolean);
+      }
+    }
+
+    function renderModule(menuId) {
+      const title = academy.menus.find(menu => menu[0] === menuId)?.[1] || "관리";
+      const classStats = academy.classes.slice(0, 6);
+      const descriptions = {
+        level: "레벨테스트 결과와 진단 메모를 학생관리와 연결합니다.",
+      };
+      $("#content").innerHTML = `
+        <article class="card">
+          <div class="section-head">
+            <div>
+              <h3>${title}</h3>
+              <p>${descriptions[menuId] || "학원 운영 데이터를 모듈별로 관리합니다."}</p>
+            </div>
+            <button class="btn primary" type="button" data-action="save">${title} 저장</button>
+          </div>
+        </article>
+        <section class="simple-grid">
+          ${classStats.map(klass => moduleCard(menuId, klass)).join("")}
+        </section>
+      `;
+      bindGlobalButtons($("#content"));
+    }
+
+    function moduleCard(menuId, klass) {
+      const students = academy.students.filter(student => student.classId === klass.id);
+      const incomplete = students.filter(student => student.records.some(record => isHomeworkIncomplete(record))).length;
+      const retest = students.filter(student => student.records.some(record => record.word === "재시험" || Number(record.word) < 80)).length;
+      const progressText = menuId === "vocab" ? `재시험 ${retest}명`
+        : menuId === "homework" ? `미완료 ${incomplete}명`
+        : `${klass.dates.length}회차 운영`;
+      return `
+        <article class="card module-card">
+          <h3>${klass.day} · ${klass.name}</h3>
+          <p>${klass.subject} · ${klass.time} · ${students.length}명</p>
+          <ul class="mini-list">
+            <li><span>운영 기간</span><strong>7/6 ~ 내신대비 전</strong></li>
+            <li><span>관리 포인트</span><strong>${progressText}</strong></li>
+            <li><span>다음 회차</span><strong>${klass.dates[2] || klass.dates[0]}</strong></li>
+          </ul>
+        </article>
+      `;
+    }
+
+    function bindGlobalButtons(scope = document) {
+      $all("[data-action]", scope).forEach(button => {
+        button.addEventListener("click", handleAction);
+      });
+    }
+
+    function handleAction(event) {
+      const action = event.currentTarget.dataset.action;
+      if (action === "student" || action === "new-student") openStudentModal(action === "new-student");
+      if (action === "close-modal") closeStudentModal();
+      if (action === "save") showToast("현재 화면의 변경 사항을 저장했습니다.");
+      if (action === "export") exportSnapshot();
+      if (action === "calc-average") calculateFeedbackAverage();
+    }
+
+    function calculateFeedbackAverage() {
+      const klass = getClass();
+      const inputs = $all('[data-student-module$="feedback.score"]');
+      const scores = inputs.map(input => Number(input.value)).filter(value => Number.isFinite(value));
+      const average = scores.length ? Math.round((scores.reduce((sum, value) => sum + value, 0) / scores.length) * 10) / 10 : "";
+      ensureModuleData("feedbackClass", klass.id, {}).average = String(average);
+      const averageInput = $("#feedbackAverage");
+      if (averageInput) averageInput.value = String(average);
+      saveState();
+      showToast(`반평균을 ${average}점으로 계산했습니다.`);
+    }
+
+    function openStudentModal(isNew) {
+      $("#studentModalTitle").textContent = isNew ? "신입생 등록" : "학생 등록";
+      $("#studentStatus").value = isNew ? "신입" : "재원";
+      $("#studentModal").classList.add("show");
+      $("#studentName").focus();
+    }
+
+    function closeStudentModal() {
+      $("#studentModal").classList.remove("show");
+      $("#studentForm").reset();
+      $("#studentStatus").value = "재원";
+    }
+
+    function populateFormOptions() {
+      $("#studentClass").innerHTML = academy.classes.map(item => `<option value="${item.id}">${item.day} · ${item.name} · ${item.time}</option>`).join("");
+    }
+
+    function saveStudent(event) {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const klass = academy.classes.find(item => item.id === form.get("classId"));
+      const courseBooks = {
+        grammar: form.get("grammarBook") || "",
+        reading: form.get("readingBook") || "",
+        writing: form.get("writingBook") || "",
+        vocab: form.get("vocabBook") || "",
+        listening: form.get("listeningBook") || ""
+      };
+      const student = {
+        id: "s" + Date.now(),
+        name: form.get("name"),
+        school: form.get("school") || "미입력",
+        grade: form.get("grade"),
+        classId: form.get("classId"),
+        book: courseBooks.grammar || "문법 교재 미입력",
+        courseBooks,
+        vocabHistory: courseBooks.vocab ? [courseBooks.vocab] : [],
+        phone: form.get("phone"),
+        parentPhone: form.get("parentPhone"),
+        status: form.get("status"),
+        memo: form.get("memo"),
+        records: klass.dates.map((date, index) => ({
+          date,
+          attendance: "출석",
+          homework: "완료",
+          homeworkItems: getHomeworkNames(klass.id, index).map(name => ({ name, status: "완료" })),
+          word: ""
+        }))
+      };
+      academy.students.push(student);
+      saveState();
+      academy.state.classId = student.classId;
+      academy.state.selectedStudentId = student.id;
+      closeStudentModal();
+      academy.state.activeMenu = "attendance";
+      render();
+      showToast(`${student.name} 학생을 등록했습니다.`);
+    }
+
+    function exportSnapshot() {
+      const klass = getClass();
+      const rows = getStudentsForClass().map(student => {
+        const recordText = student.records.map((record, index) => {
+          const homeworkText = (record.homeworkItems || []).map(item => `${item.name}:${item.status}`).join(";");
+          return `${index + 1}회차 ${record.attendance}/${homeworkText || record.homework}/${record.word}`;
+        }).join(" | ");
+        return `${student.name},${student.school},${student.grade},${student.book},${recordText}`;
+      });
+      const csv = ["학생명,학교,학년,교재,출결/과제명별상태/단어", ...rows].join("\n");
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${klass.day}_${klass.name}_출석부.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      showToast("현재 반 출석부를 CSV 파일로 내보냈습니다.");
+    }
+
+    function showToast(message) {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function studentIdentityCell(student, extra = "", selectable = false) {
+      return `
+        <td class="student-cell" ${selectable ? `data-select-student="${student.id}"` : ""}>
+          <div class="student-identity">
+            <input class="edit-input name" data-student-field="${student.id}:name" value="${escapeHtml(student.name)}" aria-label="학생 이름">
+            <input class="edit-input" data-student-field="${student.id}:school" value="${escapeHtml(student.school || "")}" aria-label="학교명">
+            ${extra ? `<span class="identity-extra">${escapeHtml(extra)}</span>` : ""}
+          </div>
+        </td>
+      `;
+    }
+
+    function studentLabel(student, extra = "") {
+      return [student.name, student.school, extra]
+        .filter(Boolean)
+        .map(escapeHtml)
+        .join(" / ");
+    }
+
+    document.addEventListener("click", event => {
+      const menuButton = event.target.closest("[data-menu]");
+      if (!menuButton) return;
+      academy.state.activeMenu = menuButton.dataset.menu;
+      render();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeStudentModal();
+    });
+
+    $("#studentForm").addEventListener("submit", saveStudent);
+    bindGlobalButtons(document);
+    createSampleData();
+    loadSavedState();
+    populateFormOptions();
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘의 랜덤 뽑기</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 620px;
+      background: #ffffff;
+      border: 1px solid #dbe3ef;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(31, 41, 55, 0.12);
+      padding: 28px;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      text-align: center;
+      font-size: 30px;
+      color: #0f172a;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 18px;
+      line-height: 1.6;
+      font-family: inherit;
+      outline: none;
+      background: #ffffff;
+    }
+
+    textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffffff;
+      background: #2563eb;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .message {
+      min-height: 26px;
+      margin-top: 14px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .result-card {
+      display: none;
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      text-align: center;
+    }
+
+    .result-title {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #475569;
+    }
+
+    .result-text {
+      margin: 0;
+      overflow-wrap: anywhere;
+      font-size: 30px;
+      font-weight: bold;
+      color: #1e40af;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 14px;
+      }
+
+      .app {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      textarea {
+        font-size: 16px;
+      }
+
+      button {
+        font-size: 18px;
+      }
+
+      .result-text {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>오늘의 랜덤 뽑기</h1>
+
+    <label for="choices">선택지를 한 줄에 하나씩 입력하세요.</label>
+    <textarea id="choices" placeholder="예시&#10;김밥&#10;떡볶이&#10;라면"></textarea>
+
+    <button type="button" id="pickButton">랜덤으로 뽑기</button>
+
+    <div class="message" id="message"></div>
+
+    <section class="result-card" id="resultCard" aria-live="polite">
+      <p class="result-title">오늘의 결과</p>
+      <p class="result-text" id="resultText"></p>
+    </section>
+  </main>
+
+  <script>
+    const choicesInput = document.getElementById("choices");
+    const pickButton = document.getElementById("pickButton");
+    const message = document.getElementById("message");
+    const resultCard = document.getElementById("resultCard");
+    const resultText = document.getElementById("resultText");
+
+    pickButton.addEventListener("click", function () {
+      const choices = choicesInput.value
+        .split("\n")
+        .map(function (choice) {
+          return choice.trim();
+        })
+        .filter(function (choice) {
+          return choice !== "";
+        });
+
+      if (choices.length === 0) {
+        message.textContent = "선택지를 먼저 입력해주세요";
+        resultCard.style.display = "none";
+        resultText.textContent = "";
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * choices.length);
+      const pickedChoice = choices[randomIndex];
+
+      message.textContent = "";
+      resultText.textContent = pickedChoice;
+      resultCard.style.display = "block";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17324d">
+  <title>김영은 영어학원 | 학원 관리</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/academy-logo.png" alt="김영은 영어학원 로고">
+        <div><strong>김영은 영어학원</strong><span>Academy Manager</span></div>
+      </div>
+
+      <nav class="main-nav" aria-label="주 메뉴">
+        <button class="nav-item active" data-view="dashboard"><span>⌂</span>오늘의 현황</button>
+        <button class="nav-item" data-view="students"><span>♙</span>학생 관리</button>
+        <button class="nav-item" data-view="classes"><span>▦</span>반 · 수업</button>
+        <button class="nav-item" data-view="attendance"><span>✓</span>출석 관리</button>
+        <button class="nav-item" data-view="payments"><span>₩</span>수납 관리 <b class="nav-badge">6</b></button>
+        <button class="nav-item" data-view="consulting"><span>◌</span>상담 관리</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="nav-item" data-view="settings"><span>⚙</span>설정</button>
+        <div class="profile-mini"><div class="avatar">김</div><div><strong>김영은 원장</strong><span>최고 관리자</span></div><button aria-label="프로필 메뉴">⋮</button></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="메뉴 열기">☰</button>
+        <div>
+          <p class="eyebrow" id="todayText"></p>
+          <h1 id="pageTitle">안녕하세요, 원장님 <span>👋</span></h1>
+        </div>
+        <div class="top-actions">
+          <label class="global-search"><span>⌕</span><input id="globalSearch" type="search" placeholder="학생 이름 검색"></label>
+          <button class="icon-button" aria-label="알림"><span>♧</span><i></i></button>
+          <button class="primary-button" data-open-modal><span>＋</span> 학생 등록</button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboardView">
+        <div class="welcome-strip">
+          <div><span class="strip-label">TODAY'S BRIEF</span><h2>오늘도 아이들의 한 걸음을<br>함께 만들어 볼까요?</h2><p>오후 4시부터 6개 수업이 예정되어 있어요.</p></div>
+          <div class="quote-card"><span>Today's sentence</span><strong>“Small steps every day<br>make a big difference.”</strong><em>매일의 작은 걸음이 큰 차이를 만들어요.</em></div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card coral"><div class="stat-icon">♙</div><div><span>전체 재원생</span><strong id="studentCount">86<small>명</small></strong><p><b>↑ 4명</b> 지난달 대비</p></div></article>
+          <article class="stat-card navy"><div class="stat-icon">✓</div><div><span>오늘 출석률</span><strong>94<small>%</small></strong><p>출석 47 · 결석 3</p></div></article>
+          <article class="stat-card gold"><div class="stat-icon">₩</div><div><span>7월 수납률</span><strong>92<small>%</small></strong><p><b>79명</b> 납부 완료</p></div></article>
+          <article class="stat-card mint"><div class="stat-icon">◌</div><div><span>신규 상담</span><strong>5<small>건</small></strong><p><b>오늘 2건</b> 예정</p></div></article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel schedule-panel">
+            <div class="panel-head"><div><span class="section-kicker">TODAY</span><h3>오늘의 수업</h3></div><button class="text-button" data-go="classes">전체 시간표 보기 →</button></div>
+            <div class="timeline">
+              <div class="time-row done"><time>14:30</time><div class="line-dot"></div><div class="class-info"><span class="class-pill middle">중등</span><strong>포산중 1</strong><small>중1 독해 · 8명</small></div><span class="status-chip">수업 완료</span></div>
+              <div class="time-row current"><time>16:00</time><div class="line-dot"></div><div class="class-info"><span class="class-pill elementary">초등</span><strong>유가족 2</strong><small>초6 문법 · 12명</small></div><span class="status-chip">곧 시작</span></div>
+              <div class="time-row"><time>17:30</time><div class="line-dot"></div><div class="class-info"><span class="class-pill middle">중등</span><strong>비슬중 1</strong><small>중2 내신 · 15명</small></div><button class="attendance-button" data-go="attendance">출석 체크</button></div>
+              <div class="time-row"><time>19:10</time><div class="line-dot"></div><div class="class-info"><span class="class-pill high">고등</span><strong>고등부 1</strong><small>고1 모의고사 · 11명</small></div><button class="attendance-button" data-go="attendance">출석 체크</button></div>
+            </div>
+          </article>
+
+          <article class="panel payment-panel">
+            <div class="panel-head"><div><span class="section-kicker">PAYMENT</span><h3>수납 현황</h3></div><button class="text-button" data-go="payments">자세히 보기 →</button></div>
+            <div class="donut-wrap"><div class="donut"><div><strong>92%</strong><span>납부 완료</span></div></div><div class="payment-legend"><p><i class="paid"></i><span>납부 완료</span><strong>79명</strong></p><p><i class="unpaid"></i><span>미납</span><strong>6명</strong></p><p><i class="exempt"></i><span>면제 · 휴원</span><strong>1명</strong></p></div></div>
+            <div class="payment-alert"><span>!</span><div><strong>미납 학생 6명</strong><p>납부 안내가 필요한 학생이 있어요.</p></div><button data-go="payments">확인하기</button></div>
+          </article>
+
+          <article class="panel notice-panel">
+            <div class="panel-head"><div><span class="section-kicker">TO DO</span><h3>오늘 확인할 일</h3></div><button class="round-add" id="addTodo" aria-label="할 일 추가">＋</button></div>
+            <ul id="todoList">
+              <li><button class="todo-check" aria-label="완료 표시"></button><div><strong>신규 상담 전화</strong><span>오후 3:00 · 예비 중1 학부모</span></div><b class="priority high">중요</b></li>
+              <li><button class="todo-check" aria-label="완료 표시"></button><div><strong>결석 학생 보강 일정 확인</strong><span>김서윤 외 2명</span></div><b class="priority">출석</b></li>
+              <li><button class="todo-check" aria-label="완료 표시"></button><div><strong>7월 교재 주문</strong><span>고등부 독해 교재 8권</span></div><b class="priority order">주문</b></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="studentsView">
+        <div class="page-heading"><div><span class="section-kicker">STUDENTS</span><h2>학생 관리</h2><p>학생의 기본 정보와 수강·출결·수납 내역을 한곳에서 관리하세요.</p></div><button class="primary-button" data-open-modal>＋ 학생 등록</button></div>
+        <div class="filter-bar"><label class="table-search"><span>⌕</span><input id="studentSearch" placeholder="이름, 학교, 반 검색"></label><select id="gradeFilter"><option value="">전체 학년</option><option>초등</option><option>중등</option><option>고등</option></select><select id="statusFilter"><option value="">전체 상태</option><option>재원</option><option>휴원</option></select><button class="outline-button" id="exportBtn">↓ 엑셀용 CSV 저장</button></div>
+        <div class="table-card"><table><thead><tr><th>학생</th><th>학교 · 학년</th><th>수강 반</th><th>학부모 연락처</th><th>이번 달 수납</th><th>상태</th><th></th></tr></thead><tbody id="studentTable"></tbody></table><div class="table-foot"><span id="tableSummary"></span><div><button disabled>‹</button><button class="active">1</button><button>2</button><button>3</button><button>›</button></div></div></div>
+      </section>
+
+      <section class="view" id="classesView">
+        <div class="page-heading"><div><span class="section-kicker">CLASSES</span><h2>반 · 수업 관리</h2><p>반별 시간표와 정원, 학생 구성을 확인하세요.</p></div><button class="primary-button" id="newClassBtn">＋ 새 반 만들기</button></div>
+        <div class="class-grid" id="classGrid"></div>
+      </section>
+
+      <section class="view" id="attendanceView">
+        <div class="page-heading"><div><span class="section-kicker">ATTENDANCE</span><h2>출석 관리</h2><p>오늘 수업의 출석 상태를 빠르게 체크하세요.</p></div><div class="date-chip">📅 2026년 7월 5일</div></div>
+        <div class="attendance-layout"><aside class="class-selector"><h3>오늘 수업</h3><button class="selected"><time>16:00</time><span><b>유가족 2</b><small>12명 · 초6 문법</small></span></button><button><time>17:30</time><span><b>비슬중 1</b><small>15명 · 중2 내신</small></span></button><button><time>19:10</time><span><b>고등부 1</b><small>11명 · 모의고사</small></span></button></aside><article class="panel roll-call"><div class="panel-head"><div><span class="section-kicker">16:00 CLASS</span><h3>유가족 2 출석부</h3></div><button class="outline-button" id="allPresent">모두 출석</button></div><div class="roll-list" id="rollList"></div></article></div>
+      </section>
+
+      <section class="view" id="paymentsView">
+        <div class="page-heading"><div><span class="section-kicker">PAYMENTS</span><h2>7월 수납 관리</h2><p>가족 합산 결제와 할인 내역까지 놓치지 않고 관리하세요.</p></div><button class="primary-button" id="addPayment">＋ 납부 등록</button></div>
+        <div class="mini-stats"><div><span>청구 금액</span><strong id="billedAmount">22,080,000원</strong></div><div><span>수납 완료</span><strong id="paidAmount">20,313,600원</strong></div><div class="warning"><span>미수금</span><strong id="unpaidAmount">1,766,400원</strong></div></div>
+        <div class="table-card"><table><thead><tr><th>학생</th><th>수강 반</th><th>청구 금액</th><th>결제자 · 메모</th><th>납부일</th><th>상태</th><th></th></tr></thead><tbody id="paymentTable"></tbody></table></div>
+      </section>
+
+      <section class="view" id="consultingView">
+        <div class="page-heading"><div><span class="section-kicker">CONSULTING</span><h2>상담 관리</h2><p>신규 문의부터 등록까지의 진행 상황을 관리하세요.</p></div><button class="primary-button" id="newConsult">＋ 신규 상담</button></div>
+        <div class="pipeline"><div><h3>신규 문의 <span>3</span></h3><article><b>예비 중1 · 포산중</b><p>문법 기초반 문의</p><small>오늘 15:00 전화 예정</small></article><article><b>초등 5학년</b><p>친구 소개 · 레벨테스트 희망</p><small>어제 접수</small></article></div><div><h3>상담 진행 <span>2</span></h3><article><b>중등 2학년 · 비슬중</b><p>내신 대비반 안내 완료</p><small>7월 7일 레벨테스트</small></article></div><div><h3>등록 예정 <span>2</span></h3><article><b>고등 1학년</b><p>고등부 1 배정</p><small>7월 8일 첫 수업</small></article></div></div>
+      </section>
+
+      <section class="view" id="settingsView">
+        <div class="page-heading"><div><span class="section-kicker">SETTINGS</span><h2>학원 설정</h2><p>학원 기본 정보와 알림 방식을 설정하세요.</p></div></div>
+        <div class="settings-card"><h3>기본 정보</h3><label>학원명<input value="김영은 영어학원"></label><label>원장명<input value="김영은"></label><label>대표 연락처<input placeholder="전화번호를 입력하세요"></label><button class="primary-button" id="saveSettings">변경사항 저장</button></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="studentModal" aria-hidden="true">
+    <form class="modal" id="studentForm">
+      <div class="modal-head"><div><span class="section-kicker" id="studentModalKicker">NEW STUDENT</span><h2 id="studentModalTitle">학생 등록</h2></div><button type="button" class="close-modal" aria-label="닫기">×</button></div>
+      <div class="form-grid"><label>학생명<input name="name" required placeholder="학생 이름"></label><label>학교<input name="school" required placeholder="학교명"></label><label>학년<select name="grade"><option>초등</option><option>중등</option><option>고등</option></select></label><label>수강 반<select name="className"><option>유가족 2</option><option>포산중 1</option><option>비슬중 1</option><option>고등부 1</option></select></label><label>학생 연락처<input name="phone" placeholder="010-0000-0000"></label><label>학부모 연락처<input name="parentPhone" required placeholder="010-0000-0000"></label><label class="full">특이사항<textarea name="memo" placeholder="형제 할인, 상담 내용 등을 입력하세요"></textarea></label></div>
+      <div class="modal-actions"><button type="button" class="outline-button close-modal">취소</button><button class="primary-button" id="studentSubmitBtn" type="submit">학생 등록하기</button></div>
+    </form>
+  </div>
+  <div class="modal-backdrop" id="classModal" aria-hidden="true">
+    <form class="modal compact-modal" id="classForm">
+      <div class="modal-head"><div><span class="section-kicker" id="classModalKicker">NEW CLASS</span><h2 id="classModalTitle">새 반 만들기</h2></div><button type="button" class="close-class-modal" aria-label="닫기">×</button></div>
+      <div class="form-grid">
+        <label>반 이름<input name="name" required placeholder="예: 포산중 2"></label><label>대상 학년<input name="level" required placeholder="예: 중등 2학년"></label>
+        <label>수업 과목<input name="subject" required placeholder="예: 내신 · 문법"></label><label>수업 일정<input name="schedule" required placeholder="예: 화·목 18:00"></label>
+        <label>현재 인원<input name="count" type="number" min="0" value="0" required></label><label>정원<input name="max" type="number" min="1" value="12" required></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="outline-button close-class-modal">취소</button><button class="primary-button" id="classSubmitBtn" type="submit">반 만들기</button></div>
+    </form>
+  </div>
+  <div class="modal-backdrop" id="paymentModal" aria-hidden="true">
+    <form class="modal compact-modal" id="paymentForm">
+      <div class="modal-head"><div><span class="section-kicker" id="paymentModalKicker">NEW PAYMENT</span><h2 id="paymentModalTitle">납부 등록</h2></div><button type="button" class="close-payment-modal" aria-label="닫기">×</button></div>
+      <div class="form-grid">
+        <label>학생<select name="studentName" required></select></label><label>납부 상태<select name="status"><option value="납부">납부 완료</option><option value="미납">미납</option><option value="일부납">일부 납부</option><option value="면제">면제</option></select></label>
+        <label>청구 금액<input name="amount" type="number" min="0" step="1000" required placeholder="270000"></label><label>납부일<input name="date" type="date"></label>
+        <label>결제자<input name="payer" placeholder="예: 어머니, 아버지"></label><label>결제 수단<select name="method"><option>카드</option><option>계좌이체</option><option>현금</option><option>기타</option></select></label>
+        <label class="full">메모<textarea name="memo" placeholder="형제 합산, 할인 사유 등을 입력하세요"></textarea></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="outline-button close-payment-modal">취소</button><button class="primary-button" id="paymentSubmitBtn" type="submit">납부 등록하기</button></div>
+    </form>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
